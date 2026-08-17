@@ -1,0 +1,181 @@
+<?php
+$pageTitle = 'Settings';
+$activePage = 'settings';
+require_once __DIR__ . '/includes/functions.php';
+require __DIR__ . '/includes/header.php';
+
+$settings = read_settings();
+?>
+
+<div class="page-head">
+  <div>
+    <h1>ID Card Settings</h1>
+    <p>Customize branding, colors, and card layout. Changes reflect instantly in the preview.</p>
+  </div>
+  <button class="btn btn-primary" id="saveSettingsBtn"><i class="bi bi-check-lg"></i> Save Settings</button>
+</div>
+
+<div class="settings-layout">
+  <div>
+    <div class="glass-card panel" style="margin-bottom:20px;">
+      <h2><i class="bi bi-building"></i> Organization Details</h2>
+      <div class="form-grid">
+        <div class="form-field"><label>Company Name</label><input type="text" id="s_companyName" value="<?= htmlspecialchars($settings['companyName']) ?>"></div>
+        <div class="form-field"><label>Institute Name</label><input type="text" id="s_instituteName" value="<?= htmlspecialchars($settings['instituteName']) ?>"></div>
+        <div class="form-field full"><label>Address</label><input type="text" id="s_address" value="<?= htmlspecialchars($settings['address']) ?>"></div>
+        <div class="form-field"><label>Website</label><input type="text" id="s_website" value="<?= htmlspecialchars($settings['website']) ?>"></div>
+        <div class="form-field"><label>Email</label><input type="text" id="s_email" value="<?= htmlspecialchars($settings['email']) ?>"></div>
+        <div class="form-field"><label>Phone</label><input type="text" id="s_phone" value="<?= htmlspecialchars($settings['phone']) ?>"></div>
+        <div class="form-field full"><label>ID Card Heading / Subtitle</label><input type="text" id="s_cardHeading" value="<?= htmlspecialchars($settings['cardHeading'] ?? 'IDENTITY CARD') ?>" placeholder="e.g. IDENTITY CARD / STUDENT ID CARD"></div>
+        <div class="form-field full"><label>Footer Text</label><input type="text" id="s_footerText" value="<?= htmlspecialchars($settings['footerText']) ?>"></div>
+      </div>
+    </div>
+
+    <div class="glass-card panel" style="margin-bottom:20px;">
+      <h2><i class="bi bi-image"></i> Branding</h2>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Logo Upload</label>
+          <input type="file" id="s_logo_file" accept="image/*">
+          <span class="hint" id="logoHint"><?= $settings['logo'] ? 'Current: ' . basename($settings['logo']) : 'No logo uploaded' ?></span>
+        </div>
+        <div class="form-field">
+          <label>Background Upload</label>
+          <input type="file" id="s_background_file" accept="image/*">
+          <span class="hint" id="bgHint"><?= $settings['background'] ? 'Current: ' . basename($settings['background']) : 'No background uploaded' ?></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card panel" style="margin-bottom:20px;">
+      <h2><i class="bi bi-palette"></i> Colors & Typography</h2>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>Primary Color</label>
+          <div class="color-row"><input type="color" id="s_primaryColor" value="<?= htmlspecialchars($settings['primaryColor']) ?>"><span id="primaryHex"><?= htmlspecialchars($settings['primaryColor']) ?></span></div>
+        </div>
+        <div class="form-field">
+          <label>Secondary Color</label>
+          <div class="color-row"><input type="color" id="s_secondaryColor" value="<?= htmlspecialchars($settings['secondaryColor']) ?>"><span id="secondaryHex"><?= htmlspecialchars($settings['secondaryColor']) ?></span></div>
+        </div>
+        <div class="form-field">
+          <label>Font Family</label>
+          <select id="s_fontFamily">
+            <?php foreach (['Poppins, sans-serif', 'Inter, sans-serif', 'Roboto, sans-serif', 'Georgia, serif', 'JetBrains Mono, monospace'] as $font): ?>
+              <option value="<?= $font ?>" <?= $settings['fontFamily'] === $font ? 'selected' : '' ?>><?= explode(',', $font)[0] ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Font Size (px)</label>
+          <input type="number" id="s_fontSize" min="10" max="20" value="<?= (int)$settings['fontSize'] ?>">
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card panel">
+      <h2><i class="bi bi-credit-card"></i> Card Layout</h2>
+      <div class="form-grid">
+        <div class="form-field"><label>Card Width (px)</label><input type="number" id="s_cardWidth" value="<?= (int)$settings['cardWidth'] ?>"></div>
+        <div class="form-field"><label>Card Height (px)</label><input type="number" id="s_cardHeight" value="<?= (int)$settings['cardHeight'] ?>"></div>
+        <div class="form-field"><label>Photo Size (px)</label><input type="number" id="s_photoSize" value="<?= (int)$settings['photoSize'] ?>"></div>
+        <div class="form-field"><label>Border Radius (px)</label><input type="number" id="s_borderRadius" value="<?= (int)$settings['borderRadius'] ?>"></div>
+        <div class="form-field">
+          <label>Orientation</label>
+          <select id="s_orientation">
+            <option value="portrait" <?= $settings['orientation'] === 'portrait' ? 'selected' : '' ?>>Portrait</option>
+            <option value="landscape" <?= $settings['orientation'] === 'landscape' ? 'selected' : '' ?>>Landscape</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Photo Position</label>
+          <select id="s_photoPosition">
+            <option value="left" <?= ($settings['photoPosition'] ?? 'left') === 'left' ? 'selected' : '' ?>>Left Side</option>
+            <option value="center" <?= ($settings['photoPosition'] ?? 'left') === 'center' ? 'selected' : '' ?>>Center (Top)</option>
+            <option value="bottom" <?= ($settings['photoPosition'] ?? 'left') === 'bottom' ? 'selected' : '' ?>>Photo Below Details (Kela)</option>
+            <option value="right" <?= ($settings['photoPosition'] ?? 'left') === 'right' ? 'selected' : '' ?>>Right Side</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Logo Position</label>
+          <select id="s_logoPosition">
+            <option value="left" <?= ($settings['logoPosition'] ?? 'left') === 'left' ? 'selected' : '' ?>>Left Side</option>
+            <option value="center" <?= ($settings['logoPosition'] ?? 'left') === 'center' ? 'selected' : '' ?>>Center Top</option>
+            <option value="right" <?= ($settings['logoPosition'] ?? 'left') === 'right' ? 'selected' : '' ?>>Right Side</option>
+            <option value="bottom" <?= ($settings['logoPosition'] ?? 'left') === 'bottom' ? 'selected' : '' ?>>Bottom Center</option>
+            <option value="hidden" <?= ($settings['logoPosition'] ?? 'left') === 'hidden' ? 'selected' : '' ?>>Hide Logo</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <label>Logo Mode</label>
+          <div class="logo-mode-actions">
+            <button type="button" class="logo-mode-btn <?= ($settings['logoPosition'] ?? 'left') === 'left' ? 'selected' : '' ?>" onclick="setLogoMode('left', this)"><i class="bi bi-align-start"></i> Left</button>
+            <button type="button" class="logo-mode-btn <?= ($settings['logoPosition'] ?? 'left') === 'center' ? 'selected' : '' ?>" onclick="setLogoMode('center', this)"><i class="bi bi-align-center"></i> Center</button>
+            <button type="button" class="logo-mode-btn <?= ($settings['logoPosition'] ?? 'left') === 'right' ? 'selected' : '' ?>" onclick="setLogoMode('right', this)"><i class="bi bi-align-end"></i> Right</button>
+            <button type="button" class="logo-mode-btn <?= ($settings['logoPosition'] ?? 'left') === 'bottom' ? 'selected' : '' ?>" onclick="setLogoMode('bottom', this)"><i class="bi bi-align-bottom"></i> Bottom</button>
+            <button type="button" class="logo-mode-btn <?= ($settings['logoPosition'] ?? 'left') === 'hidden' ? 'selected' : '' ?>" onclick="setLogoMode('hidden', this)"><i class="bi bi-eye-slash"></i> Hide</button>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="chip-toggle">Shadow
+            <span class="switch"><input type="checkbox" id="s_shadow" <?= $settings['shadow'] ? 'checked' : '' ?>><span class="slider-toggle"></span></span>
+          </label>
+        </div>
+        <div class="form-field">
+          <label class="chip-toggle">Show QR Code
+            <span class="switch"><input type="checkbox" id="s_showQrCode" <?= $settings['showQrCode'] ? 'checked' : '' ?>><span class="slider-toggle"></span></span>
+          </label>
+        </div>
+        <div class="form-field">
+          <label class="chip-toggle">Show Barcode
+            <span class="switch"><input type="checkbox" id="s_showBarcode" <?= $settings['showBarcode'] ? 'checked' : '' ?>><span class="slider-toggle"></span></span>
+          </label>
+        </div>
+        <div class="form-field">
+          <label>Barcode Position (Back)</label>
+          <select id="s_barcodePosition">
+            <option value="bottom" <?= ($settings['barcodePosition'] ?? 'bottom') === 'bottom' ? 'selected' : '' ?>>Bottom</option>
+            <option value="left" <?= ($settings['barcodePosition'] ?? 'bottom') === 'left' ? 'selected' : '' ?>>Left Side</option>
+            <option value="right" <?= ($settings['barcodePosition'] ?? 'bottom') === 'right' ? 'selected' : '' ?>>Right Side</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Barcode Orientation</label>
+          <select id="s_barcodeOrientation">
+            <option value="horizontal" <?= ($settings['barcodeOrientation'] ?? 'horizontal') === 'horizontal' ? 'selected' : '' ?>>Horizontal</option>
+            <option value="vertical" <?= ($settings['barcodeOrientation'] ?? 'horizontal') === 'vertical' ? 'selected' : '' ?>>Vertical</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Barcode Move Left / Right (px)</label>
+          <input type="number" id="s_barcodeOffsetX" min="-180" max="180" value="<?= (int)($settings['barcodeOffsetX'] ?? 0) ?>">
+        </div>
+        <div class="form-field">
+          <label>Barcode Move Up / Down (px)</label>
+          <input type="number" id="s_barcodeOffsetY" min="-140" max="140" value="<?= (int)($settings['barcodeOffsetY'] ?? 0) ?>">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-sticky">
+    <div class="glass-card panel">
+      <h2><i class="bi bi-eye"></i> Live Preview</h2>
+      <div class="card-preview-wrap" id="previewWrap" style="padding:10px 0;"></div>
+      <p class="hint" id="previewRecordName" style="text-align:center;"></p>
+      <p class="hint" style="text-align:center;">Preview updates instantly as you change settings.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+<script>
+window.__layoutStyle = <?= json_encode($settings['layoutStyle'] ?? '') ?>;
+window.__cardSideMode = <?= json_encode($settings['cardSideMode'] ?? 'double') ?>;
+window.__qrPosition = <?= json_encode($settings['qrPosition'] ?? 'footer') ?>;
+</script>
+<script src="assets/js/card-render.js?v=layout9"></script>
+<script src="assets/js/settings.js?v=20260722-9"></script>
+
+<?php require __DIR__ . '/includes/footer.php'; ?>

@@ -1,0 +1,40 @@
+[
+    {
+        "id": "PAT0001",
+        "name": "Manoj Pillai",
+        "patient_id_number": "PT9001",
+        "doctor_name": "Dr. Anitha Krishnan",
+        "blood_group": "O-",
+        "dob": "1985-11-02",
+        "gender": "Male",
+        "emergency_contact": "9000000005",
+        "phone": "9000000006",
+        "address": "5 Adyar, Chennai",
+        "photo": "",
+        "hospital_name": "City Care Hospital",
+        "issue_date": "2026-07-01",
+        "expiry_date": "2026-12-31",
+        "status": "Active",
+        "created_at": "2026-07-15 08:45:00",
+        "updated_at": "2026-07-15 08:45:00"
+    },
+    {
+        "name": "Santhosh",
+        "patient_id_number": "3009",
+        "doctor_name": "Santhosh kumar",
+        "blood_group": "A+",
+        "dob": "2026-07-30",
+        "gender": "Male",
+        "emergency_contact": "7847293470",
+        "phone": "6374618797",
+        "address": "Aduthurai",
+        "hospital_name": "RK Hospital",
+        "issue_date": "2025",
+        "expiry_date": "2026",
+        "status": "Active",
+        "photo": "uploads/hospital_6a620ad40f817.webp",
+        "id": "PAT0002",
+        "created_at": "2026-07-23 14:36:36",
+        "updated_at": "2026-07-23 14:36:36"
+    }
+]
